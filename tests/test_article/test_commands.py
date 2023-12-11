@@ -1,7 +1,7 @@
 import pytest
 
+from blog.commands import AlreadyExists, CreateArticleCommand
 from blog.models import Article
-from blog.commands import CreateArticleCommand, AlreadyExists
 
 
 def test_create_article():
@@ -11,9 +11,7 @@ def test_create_article():
     THEN a new Article must exist in the database with the samse attributes
     """
     cmd = CreateArticleCommand(
-        author="john@doe.com",
-        title="New Article",
-        content="Super awesome article"
+        author="john@doe.com", title="New Article", content="Super awesome article"
     )
 
     article = cmd.execute()
@@ -40,9 +38,7 @@ def test_create_article_already_exists():
     ).save()
 
     cmd = CreateArticleCommand(
-        author="john@doe.com",
-        title="New Article",
-        content="Super awesome article"
+        author="john@doe.com", title="New Article", content="Super awesome article"
     )
 
     with pytest.raises(AlreadyExists):

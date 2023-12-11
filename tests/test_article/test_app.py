@@ -21,17 +21,15 @@ def validate_payload(payload, schema_name):
     """
     Validate payload with selected schema
     """
-    schemas_dir = str(
-        f"{pathlib.Path(__file__).parent.absolute()}/schemas"
-    )
+    schemas_dir = str(f"{pathlib.Path(__file__).parent.absolute()}/schemas")
     schema = json.loads(pathlib.Path(f"{schemas_dir}/{schema_name}").read_text())
     validate(
         payload,
         schema,
         resolver=RefResolver(
             "file://" + str(pathlib.Path(f"{schemas_dir}/{schema_name}").absolute()),
-            schema  # it's used to resolve the file inside schemas correctly
-        )
+            schema,  # it's used to resolve the file inside schemas correctly
+        ),
     )
 
 
@@ -42,15 +40,13 @@ def test_create_article(client):
     THEN it should return Article in json format that matches the schema
     """
     data = {
-        'author': "john@doe.com",
+        "author": "john@doe.com",
         "title": "New Article",
-        "content": "Some extra awesome content"
+        "content": "Some extra awesome content",
     }
     response = client.post(
         "/create-article/",
-        data=json.dumps(
-            data
-        ),
+        data=json.dumps(data),
         content_type="application/json",
     )
 
@@ -66,7 +62,7 @@ def test_get_article(client):
     article = Article(
         author="jane@doe.com",
         title="New Article",
-        content="Super extra awesome article"
+        content="Super extra awesome article",
     ).save()
     response = client.get(
         f"/article/{article.id}/",
@@ -85,7 +81,7 @@ def test_list_articles(client):
     Article(
         author="jane@doe.com",
         title="New Article",
-        content="Super extra awesome article"
+        content="Super extra awesome article",
     ).save()
     response = client.get(
         "/article-list/",
@@ -101,18 +97,14 @@ def test_list_articles(client):
         {
             "author": "John Doe",
             "title": "New Article",
-            "content": "Some extra awesome content"
+            "content": "Some extra awesome content",
         },
         {
             "author": "John Doe",
             "title": "New Article",
         },
-        {
-            "author": "John Doe",
-            "title": None,
-            "content": "Some extra awesome content"
-        }
-    ]
+        {"author": "John Doe", "title": None, "content": "Some extra awesome content"},
+    ],
 )
 def test_create_article_bad_request(client, data):
     """
@@ -122,9 +114,7 @@ def test_create_article_bad_request(client, data):
     """
     response = client.post(
         "/create-article/",
-        data=json.dumps(
-            data
-        ),
+        data=json.dumps(data),
         content_type="application/json",
     )
 
@@ -139,8 +129,8 @@ def test_create_list_get(client):
         json={
             "author": "john@doe.com",
             "title": "New Article",
-            "content": "Some extra awesome content"
-        }
+            "content": "Some extra awesome content",
+        },
     )
     response = requests.get(
         "http://localhost:5000/article-list/",
